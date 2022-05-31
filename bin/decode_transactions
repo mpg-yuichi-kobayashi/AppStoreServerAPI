@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+require 'jwt'
+require 'json'
+require 'time'
+
+# https://developer.apple.com/documentation/appstoreserverapi/jwstransaction
+# https://developer.apple.com/documentation/appstoreserverapi/jwstransactiondecodedpayload
+
+File.open(ARGV[0]) { |f|
+    data = JSON.load(f)
+#    p data
+    data['signedTransactions'].each { |token|
+        payload = JWT.decode(token, nil, false, algorithm: 'ES256').first
+        puts "----------"
+        tid = payload['transactionId']
+        orig_tid = payload['originalTransactionId']
+        date = Time.at(payload['purchaseDate'] / 1000)
+        exp_date = Time.at(payload['expiresDate'] / 1000)
+        orig_date = Time.at(payload['originalPurchaseDate'] / 1000)
+        puts "tid=#{tid}, date=#{date}, expiration=#{exp_date} / orig.tid=#{orig_tid}, orig.date=#{orig_date}"
+        puts JSON.pretty_generate(payload)
+    }
+}

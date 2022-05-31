@@ -1,12 +1,36 @@
-### How to use:
+## 使い方
 
-1. Download source code to your computer
-2. Put your API key to `keys` folder in the sources.
-3. Install gems using `bundle install`command in the terminal.
-4. If you have errors with your ruby version, change in `.ruby-version` and `Gemfile` files to your Ruby version.
-5. Call in the terminal:
+1. このリポジトリをダウンロード
+2. APIキー(.p8)を `keys` フォルダに置く
+    - https://developer.apple.com/documentation/appstoreserverapi/creating_api_keys_to_use_with_the_app_store_server_api
+3. gemをインストール
+    - `.ruby-version` と `Gemfile` のRubyバージョンを適宜変更
+    - `bundle install --path vender/bundle`
+4. ターミナルで以下のように実行
 
-`OTI=ORIGINAL_TRANSACTION_ID KEY=SubscriptionKey_YOURKEYID.p8 bin/subscription`
-`ISS=3ac3c13e-68bc-4d3d-8310-a7339bbbba44 ENDPOINT=/v1/apps KEY=AuthKey_YZ6X5BRP9U.p8 bin/start`
+```
+KEY=SubscriptionKey_YOURKEYID.p8 ISS=ISSUER_ID BID=APP_BUNDLE_ID ENDPOINT=/inApps/v1/history/ORIGINAL_TRANSACTION_ID bundle exec bin/server
 
-where `ORIGINAL_TRANSACTION_ID` is your original transaction id and `YOURKEYID` is your Key ID.
+  - YOURKEYID: APIキーID
+  - APP_BUNDLE_ID: 対象アプリのバンドルID(e.g. jp.mediplat.sugisapo.walk)
+  - ORIGINAL_TRANSACTION_ID: オリジナルトランザクションID(サーバDBに残っているはず)
+```
+
+### 購入履歴の調べ方
+
+上記の方法で [Get Transaction History](https://developer.apple.com/documentation/appstoreserverapi/get_transaction_history) APIを呼ぶことで購入履歴を取得できる。
+一度のAPIで最大20件までしか返らないため、レスポンス `revision` をパラメータに渡して後続の値を取得する。
+
+```
+... ENDPOINT=/inApps/v1/history/ORIGINAL_TRANSACTION_ID?revision=REVISION bundle exec bin/server
+
+  - REVISION: 直前のAPIレスポンス `revision` の値
+```
+
+またレスポンスJSONの `signedTransactions` はJWTのようにエンコードされているので、以下のコマンドでデコードできる。
+
+```
+bundle exec bin/decode_transactions result.json
+```
+
+参考: https://developer.apple.com/documentation/appstoreserverapi/jwstransaction
