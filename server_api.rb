@@ -26,19 +26,19 @@ class ServerAPI
   end
 
   def call
-    puts "JWT: #{jwt}"
-    puts "JWT Payload: #{payload}"
-    puts "JWT Headers: #{headers}"
+    STDERR.puts "JWT: #{jwt}"
+    STDERR.puts "JWT Payload: #{payload}"
+    STDERR.puts "JWT Headers: #{headers}"
 
     @response = request!
 
-    puts decoded_response
+    STDOUT.puts decoded_response
   end
 
   private
 
   def decoded_response
-    response
+    JSON.pretty_generate(response)
   end
 
   def request!

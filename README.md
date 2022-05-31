@@ -9,7 +9,7 @@
 4. ターミナルで以下のように実行
 
 ```
-KEY=SubscriptionKey_YOURKEYID.p8 ISS=ISSUER_ID BID=APP_BUNDLE_ID ENDPOINT=/inApps/v1/history/ORIGINAL_TRANSACTION_ID bundle exec bin/server
+KEY=SubscriptionKey_YOURKEYID.p8 ISS=ISSUER_ID BID=APP_BUNDLE_ID ENDPOINT=/inApps/v1/history/ORIGINAL_TRANSACTION_ID bundle exec bin/server > result.json
 
   - YOURKEYID: APIキーID
   - APP_BUNDLE_ID: 対象アプリのバンドルID
@@ -22,7 +22,7 @@ KEY=SubscriptionKey_YOURKEYID.p8 ISS=ISSUER_ID BID=APP_BUNDLE_ID ENDPOINT=/inApp
 一度のAPIで最大20件までしか返らないため、レスポンス `revision` をパラメータに渡して後続の値を取得する。
 
 ```
-... ENDPOINT=/inApps/v1/history/ORIGINAL_TRANSACTION_ID?revision=REVISION bundle exec bin/server
+... ENDPOINT=/inApps/v1/history/ORIGINAL_TRANSACTION_ID?revision=REVISION bundle exec bin/server > result.json
 
   - REVISION: 直前のAPIレスポンス `revision` の値
 ```
