@@ -12,8 +12,8 @@
 KEY=SubscriptionKey_YOURKEYID.p8 ISS=ISSUER_ID BID=APP_BUNDLE_ID ENDPOINT=/inApps/v1/history/ORIGINAL_TRANSACTION_ID bundle exec bin/server
 
   - YOURKEYID: APIキーID
-  - APP_BUNDLE_ID: 対象アプリのバンドルID(e.g. jp.mediplat.sugisapo.walk)
-  - ORIGINAL_TRANSACTION_ID: オリジナルトランザクションID(サーバDBに残っているはず)
+  - APP_BUNDLE_ID: 対象アプリのバンドルID
+  - ORIGINAL_TRANSACTION_ID: オリジナルトランザクションID
 ```
 
 ### 購入履歴の調べ方
