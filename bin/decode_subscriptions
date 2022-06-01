@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+require 'jwt'
+require 'json'
+require 'time'
+
+# https://developer.apple.com/documentation/appstoreserverapi/statusresponse
+
+File.open(ARGV[0]) { |f|
+    data = JSON.load(f)
+#    puts JSON.pretty_generate(data)
+    data['data'].each { |group|
+        puts "=========="
+        puts "subscriptionGroupIdentifier=#{group['subscriptionGroupIdentifier']}"
+        group['lastTransactions'].each { |item|
+            orig_tid = item['originalTransactionId']
+            # status
+            # https://developer.apple.com/documentation/appstoreserverapi/status
+            status = item['status']
+            transaction_info = JWT.decode(item['signedTransactionInfo'], nil, false, algorithm: 'ES256').first
+            renewal_info = JWT.decode(item['signedRenewalInfo'], nil, false, algorithm: 'ES256').first
+            puts "----------"
+            puts "orig.tid=#{orig_tid}, status=#{status}"
+            puts "transaction_info:"
+            puts JSON.pretty_generate(transaction_info)
+            puts "renewal_info:"
+            puts JSON.pretty_generate(renewal_info)
+        }
+    }
+}
